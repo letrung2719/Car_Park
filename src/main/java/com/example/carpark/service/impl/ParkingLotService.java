@@ -13,9 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class ParkingLotService implements IParkingLotService {
-    @Autowired
     private ParkingLotRepository parkingLotRepository;
-
     private ModelMapper modelMapper;
 
     public ParkingLotService(ParkingLotRepository parkingLotRepository, ModelMapper modelMapper) {

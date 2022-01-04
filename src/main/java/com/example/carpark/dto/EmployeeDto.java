@@ -15,5 +15,6 @@ public class EmployeeDto implements Serializable {
     private String employeeEmail;
     private String employeeName;
     private String employeePhone;
+    private String password;
     private Character sex;
 }

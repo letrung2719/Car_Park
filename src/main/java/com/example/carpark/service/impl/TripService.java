@@ -13,9 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class TripService implements ITripService {
-    @Autowired
     private TripRepository tripRepository;
-
     private ModelMapper modelMapper;
 
     public TripService(TripRepository tripRepository, ModelMapper modelMapper) {

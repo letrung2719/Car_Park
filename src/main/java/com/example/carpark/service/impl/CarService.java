@@ -13,9 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class CarService implements ICarService {
-    @Autowired
     private CarRepository carRepository;
-
     private ModelMapper modelMapper;
 
     public CarService(CarRepository carRepository, ModelMapper modelMapper) {

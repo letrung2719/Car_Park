@@ -13,9 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class EmployeeService implements IEmployeeService {
-    @Autowired
     private EmployeeRepository employeeRepository;
-
     private ModelMapper modelMapper;
 
     public EmployeeService(EmployeeRepository employeeRepository, ModelMapper modelMapper) {

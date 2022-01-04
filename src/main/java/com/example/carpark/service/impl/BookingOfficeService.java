@@ -13,9 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class BookingOfficeService implements IBookingOfficeService {
-    @Autowired
     private BookingOfficeRepository bookingOfficeRepository;
-
     private ModelMapper modelMapper;
 
     public BookingOfficeService(BookingOfficeRepository bookingOfficeRepository, ModelMapper modelMapper) {
