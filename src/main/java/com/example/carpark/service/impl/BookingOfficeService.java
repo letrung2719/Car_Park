@@ -5,7 +5,6 @@ import com.example.carpark.model.BookingOffice;
 import com.example.carpark.repository.BookingOfficeRepository;
 import com.example.carpark.service.IBookingOfficeService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +14,9 @@ import java.util.stream.Collectors;
 public class BookingOfficeService implements IBookingOfficeService {
     private BookingOfficeRepository bookingOfficeRepository;
     private ModelMapper modelMapper;
+
+//    public BookingOfficeService() {
+//    }
 
     public BookingOfficeService(BookingOfficeRepository bookingOfficeRepository, ModelMapper modelMapper) {
         this.bookingOfficeRepository = bookingOfficeRepository;
@@ -61,4 +63,24 @@ public class BookingOfficeService implements IBookingOfficeService {
         BookingOffice bookingOffice = modelMapper.map(bookingOfficeDto, BookingOffice.class);
         return bookingOffice;
     }
+
+//    public void Test() {
+//        BookingOfficeDto dto = new BookingOfficeDto();
+//        dto.setOfficeName("ABC");
+//        dto.setOfficePhone("0123456789");
+//        dto.setOfficePrice(200000L);
+//        dto.setOfficePlace("Ha Noi");
+//        dto.setEndContractDeadline(Date.valueOf("2022-01-05"));
+//        dto.setStartContractDeadline(Date.valueOf("2022-01-10"));
+//        dto.setTripId(3L);
+//        System.out.println(dto);
+//
+//        ModelMapper modelMapper = new ModelMapper();
+//        System.out.println(modelMapper.map(dto, BookingOffice.class));
+//    }
+//
+//    public static void main(String[] args) {
+//        BookingOfficeService service = new BookingOfficeService();
+//        service.Test();
+//    }
 }

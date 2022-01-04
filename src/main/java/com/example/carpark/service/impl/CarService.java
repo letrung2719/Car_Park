@@ -5,7 +5,6 @@ import com.example.carpark.model.Car;
 import com.example.carpark.repository.CarRepository;
 import com.example.carpark.service.ICarService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,6 +14,9 @@ import java.util.stream.Collectors;
 public class CarService implements ICarService {
     private CarRepository carRepository;
     private ModelMapper modelMapper;
+
+//    public CarService() {
+//    }
 
     public CarService(CarRepository carRepository, ModelMapper modelMapper) {
         this.carRepository = carRepository;
@@ -61,4 +63,22 @@ public class CarService implements ICarService {
         Car car = modelMapper.map(carDto, Car.class);
         return car;
     }
+
+//    public void Test() {
+//        CarDto carDto = new CarDto();
+//        carDto.setLicensePlate("123-4567");
+//        carDto.setCarColor("Red");
+//        carDto.setCarType("Honda");
+//        carDto.setCompany("Thanh Trung");
+//        carDto.setParkId(1L);
+//        System.out.println(carDto);
+//
+//        ModelMapper modelMapper = new ModelMapper();
+//        System.out.println(modelMapper.map(carDto, Car.class));
+//    }
+//
+//    public static void main(String[] args) {
+//        CarService carService = new CarService();
+//        carService.Test();
+//    }
 }

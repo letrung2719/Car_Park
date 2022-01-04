@@ -25,7 +25,7 @@ public class ParkingLot {
     @Column(name = "park_name", nullable = false, length = 50)
     private String parkName;
 
-    @Column(name = "park_place", nullable = false, length = 11)
+    @Column(name = "park_place", nullable = false, length = 50)
     private String parkPlace;
 
     @Column(name = "park_price", nullable = false)

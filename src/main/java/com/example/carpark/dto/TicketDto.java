@@ -12,6 +12,6 @@ public class TicketDto implements Serializable {
     private Long ticketId;
     private Time bookingTime;
     private String customerName;
-    private CarDto car;
-    private TripDto trip;
+    private String licensePlate;
+    private Long tripId;
 }
