@@ -3,8 +3,11 @@ package com.example.carpark.service.impl;
 import com.example.carpark.dto.CarDto;
 import com.example.carpark.model.Car;
 import com.example.carpark.repository.CarRepository;
+import com.example.carpark.repository.ParkingLotRepository;
 import com.example.carpark.service.ICarService;
+import org.jetbrains.annotations.TestOnly;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,8 +18,8 @@ public class CarService implements ICarService {
     private CarRepository carRepository;
     private ModelMapper modelMapper;
 
-//    public CarService() {
-//    }
+    public CarService() {
+    }
 
     public CarService(CarRepository carRepository, ModelMapper modelMapper) {
         this.carRepository = carRepository;
@@ -64,21 +67,31 @@ public class CarService implements ICarService {
         return car;
     }
 
-//    public void Test() {
-//        CarDto carDto = new CarDto();
-//        carDto.setLicensePlate("123-4567");
-//        carDto.setCarColor("Red");
-//        carDto.setCarType("Honda");
-//        carDto.setCompany("Thanh Trung");
-//        carDto.setParkId(1L);
-//        System.out.println(carDto);
-//
-//        ModelMapper modelMapper = new ModelMapper();
-//        System.out.println(modelMapper.map(carDto, Car.class));
-//    }
-//
-//    public static void main(String[] args) {
-//        CarService carService = new CarService();
-//        carService.Test();
-//    }
+    @TestOnly
+    public void Test() {
+        ModelMapper modelMapper = new ModelMapper();
+
+        // setup
+        TypeMap<CarDto, Car> propertyMapper = modelMapper.createTypeMap(CarDto.class, Car.class);
+        // add deep mapping to flatten source's CarDto object into a single field in destination
+        propertyMapper.addMappings(
+                mapper -> mapper.map(src -> src.getParkId(), Car::setParkingLot)
+        );
+
+        // when map between different hierarchies
+        CarDto carDto = new CarDto();
+        carDto.setLicensePlate("123-4567");
+        carDto.setCarColor("Red");
+        carDto.setCarType("Honda");
+        carDto.setCompany("Thanh Trung");
+        carDto.setParkId(1L);
+        System.out.println(carDto);
+
+        System.out.println(modelMapper.map(carDto, Car.class));
+    }
+
+    public static void main(String[] args) {
+        CarService carService = new CarService();
+        carService.Test();
+    }
 }
