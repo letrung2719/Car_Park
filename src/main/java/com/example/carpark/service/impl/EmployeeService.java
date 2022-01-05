@@ -5,6 +5,7 @@ import com.example.carpark.model.Employee;
 import com.example.carpark.repository.EmployeeRepository;
 import com.example.carpark.service.IEmployeeService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -74,6 +75,7 @@ public class EmployeeService implements IEmployeeService {
     //convert Entity to DTO
     @Override
     public EmployeeDto mapToDto(Employee employee) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         EmployeeDto employeeDto = modelMapper.map(employee, EmployeeDto.class);
         return employeeDto;
     }
@@ -81,6 +83,7 @@ public class EmployeeService implements IEmployeeService {
     //convert DTO to Entity
     @Override
     public Employee mapToEntity(EmployeeDto employeeDto) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         Employee employee = modelMapper.map(employeeDto, Employee.class);
         return employee;
     }

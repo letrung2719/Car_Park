@@ -5,6 +5,7 @@ import com.example.carpark.model.ParkingLot;
 import com.example.carpark.repository.ParkingLotRepository;
 import com.example.carpark.service.IParkingLotService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +52,7 @@ public class ParkingLotService implements IParkingLotService {
     //convert Entity to DTO
     @Override
     public ParkingLotDto mapToDto(ParkingLot parkingLot) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         ParkingLotDto parkingLotDto = modelMapper.map(parkingLot, ParkingLotDto.class);
         return parkingLotDto;
     }
@@ -58,6 +60,7 @@ public class ParkingLotService implements IParkingLotService {
     //convert DTO to Entity
     @Override
     public ParkingLot mapToEntity(ParkingLotDto parkingLotDto) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         ParkingLot parkingLot = modelMapper.map(parkingLotDto, ParkingLot.class);
         return parkingLot;
     }

@@ -8,6 +8,7 @@ import com.example.carpark.service.ICarService;
 import org.jetbrains.annotations.TestOnly;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,9 +18,6 @@ import java.util.stream.Collectors;
 public class CarService implements ICarService {
     private CarRepository carRepository;
     private ModelMapper modelMapper;
-
-    public CarService() {
-    }
 
     public CarService(CarRepository carRepository, ModelMapper modelMapper) {
         this.carRepository = carRepository;
@@ -56,6 +54,7 @@ public class CarService implements ICarService {
     //convert Entity to DTO
     @Override
     public CarDto mapToDto(Car car) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         CarDto carDto = modelMapper.map(car, CarDto.class);
         return carDto;
     }
@@ -63,35 +62,8 @@ public class CarService implements ICarService {
     //convert DTO to Entity
     @Override
     public Car mapToEntity(CarDto carDto) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         Car car = modelMapper.map(carDto, Car.class);
         return car;
-    }
-
-    @TestOnly
-    public void Test() {
-        ModelMapper modelMapper = new ModelMapper();
-
-        // setup
-        TypeMap<CarDto, Car> propertyMapper = modelMapper.createTypeMap(CarDto.class, Car.class);
-        // add deep mapping to flatten source's CarDto object into a single field in destination
-        propertyMapper.addMappings(
-                mapper -> mapper.map(src -> src.getParkId(), Car::setParkingLot)
-        );
-
-        // when map between different hierarchies
-        CarDto carDto = new CarDto();
-        carDto.setLicensePlate("123-4567");
-        carDto.setCarColor("Red");
-        carDto.setCarType("Honda");
-        carDto.setCompany("Thanh Trung");
-        carDto.setParkId(1L);
-        System.out.println(carDto);
-
-        System.out.println(modelMapper.map(carDto, Car.class));
-    }
-
-    public static void main(String[] args) {
-        CarService carService = new CarService();
-        carService.Test();
     }
 }

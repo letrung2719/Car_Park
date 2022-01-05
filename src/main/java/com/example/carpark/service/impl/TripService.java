@@ -5,6 +5,7 @@ import com.example.carpark.model.Trip;
 import com.example.carpark.repository.TripRepository;
 import com.example.carpark.service.ITripService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +52,7 @@ public class TripService implements ITripService {
     //convert Entity to DTO
     @Override
     public TripDto mapToDto(Trip trip) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         TripDto tripDto = modelMapper.map(trip, TripDto.class);
         return tripDto;
     }
@@ -58,6 +60,7 @@ public class TripService implements ITripService {
     //convert DTO to Entity
     @Override
     public Trip mapToEntity(TripDto tripDto) {
+        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         Trip trip = modelMapper.map(tripDto, Trip.class);
         return trip;
     }
