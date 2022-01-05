@@ -3,12 +3,8 @@ package com.example.carpark.service.impl;
 import com.example.carpark.dto.CarDto;
 import com.example.carpark.model.Car;
 import com.example.carpark.repository.CarRepository;
-import com.example.carpark.repository.ParkingLotRepository;
 import com.example.carpark.service.ICarService;
-import org.jetbrains.annotations.TestOnly;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,14 +31,19 @@ public class CarService implements ICarService {
 
     //add new car
     @Override
-    public void addNewCar(CarDto carDto) {
-        carRepository.save(this.mapToEntity(carDto));
+    public Car addNewCar(CarDto carDto) {
+        return carRepository.save(this.mapToEntity(carDto));
     }
 
     //delete car by license plate
     @Override
-    public void deleteCarByLicensePlate(String s) {
-        carRepository.deleteById(s);
+    public String deleteCarByLicensePlate(String licensePlate) {
+        if (this.existsById(licensePlate)){
+            carRepository.deleteById(licensePlate);
+            return "Delete car successfully!";
+        }else{
+            return "This id is not existed!";
+        }
     }
 
     //check car existed
@@ -54,7 +55,6 @@ public class CarService implements ICarService {
     //convert Entity to DTO
     @Override
     public CarDto mapToDto(Car car) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         CarDto carDto = modelMapper.map(car, CarDto.class);
         return carDto;
     }
@@ -62,7 +62,6 @@ public class CarService implements ICarService {
     //convert DTO to Entity
     @Override
     public Car mapToEntity(CarDto carDto) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         Car car = modelMapper.map(carDto, Car.class);
         return car;
     }

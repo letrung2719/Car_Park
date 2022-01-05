@@ -11,46 +11,34 @@ import java.util.List;
 @RestController
 @RequestMapping("employee")
 public class EmployeeController {
-    @Autowired
-    private IEmployeeService employeeService;
+    private final IEmployeeService employeeService;
 
-    @GetMapping("view")
+    public EmployeeController(IEmployeeService employeeService) {
+        this.employeeService = employeeService;
+    }
+
+    @GetMapping("/view")
     public List<EmployeeDto> getAllEmployees() {
         return employeeService.getAllEmployees();
     }
 
-    @PostMapping("add")
-    public String addNewEmployee(@ModelAttribute EmployeeDto employeeDto) {
-        employeeService.addNewEmployee(employeeDto);
-        return "Add new employee successfully!";
+    @PostMapping("/add")
+    public Employee addNewEmployee(@ModelAttribute EmployeeDto employeeDto) {
+        return employeeService.addNewEmployee(employeeDto);
     }
 
-    @GetMapping("delete/{employee_id}")
+    @GetMapping("/delete/{employee_id}")
     public String deleteEmployeeById(@PathVariable("employee_id") String employee_id) {
-        if(employeeService.existsById(Long.parseLong(employee_id))){
-            employeeService.deleteById(Long.parseLong(employee_id));
-            return "Delete employee successfully!";
-        }else{
-            return "This id is not existed!";
-        }
+        return employeeService.deleteById(Long.parseLong(employee_id));
     }
 
-    @GetMapping("edit")
+    @GetMapping("/edit")
     public String editEmployee(@RequestParam Long id, @ModelAttribute EmployeeDto employeeDto) {
-        if(employeeService.existsById(id)){
-            employeeService.editEmployee(id, employeeDto);
-            return "Edit employee successfully!";
-        }else{
-            return "This id is not existed!";
-        }
+        return employeeService.editEmployee(id, employeeDto);
     }
 
     @GetMapping("search/{employee_id}")
     public EmployeeDto searchEmployeeById(@PathVariable("employee_id") String employee_id) {
-        if(employeeService.existsById(Long.parseLong(employee_id))){
-            return employeeService.searchEmployeeById(Long.parseLong(employee_id));
-        }else{
-            return null;
-        }
+        return employeeService.searchEmployeeById(Long.parseLong(employee_id));
     }
 }

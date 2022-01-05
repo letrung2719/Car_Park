@@ -5,7 +5,6 @@ import com.example.carpark.model.Ticket;
 import com.example.carpark.repository.TicketRepository;
 import com.example.carpark.service.ITicketService;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,14 +31,19 @@ public class TicketService implements ITicketService {
 
     //add new ticket
     @Override
-    public void addNewTicket(TicketDto tickerDto) {
-        ticketRepository.save(this.mapToEntity(tickerDto));
+    public Ticket addNewTicket(TicketDto tickerDto) {
+        return ticketRepository.save(this.mapToEntity(tickerDto));
     }
 
     //delete ticket by id
     @Override
-    public void deleteTicketById(Long id) {
-        ticketRepository.deleteById(id);
+    public String deleteTicketById(Long id) {
+        if (this.existsById(id)){
+            ticketRepository.deleteById(id);
+            return "Delete ticket successfully!";
+        }else{
+            return "This id is not existed!";
+        }
     }
 
     //check ticket existed
@@ -51,8 +55,6 @@ public class TicketService implements ITicketService {
     //convert Entity to DTO
     @Override
     public TicketDto mapToDto(Ticket ticket) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-        modelMapper.getConfiguration().setAmbiguityIgnored(true);
         TicketDto tickerDto = modelMapper.map(ticket, TicketDto.class);
         return tickerDto;
     }
@@ -60,8 +62,6 @@ public class TicketService implements ITicketService {
     //convert DTO to Entity
     @Override
     public Ticket mapToEntity(TicketDto tickerDto) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
-        modelMapper.getConfiguration().setAmbiguityIgnored(true);
         Ticket ticket = modelMapper.map(tickerDto, Ticket.class);
         return ticket;
     }

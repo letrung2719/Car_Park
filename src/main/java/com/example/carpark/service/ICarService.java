@@ -10,10 +10,10 @@ public interface ICarService {
     List<CarDto> getAllCars();
 
     //add new car
-    void addNewCar(CarDto carDto);
+    Car addNewCar(CarDto carDto);
 
     //delete car by license plate
-    void deleteCarByLicensePlate(String s);
+    String deleteCarByLicensePlate(String s);
 
     //check car existed
     boolean existsById(String s);

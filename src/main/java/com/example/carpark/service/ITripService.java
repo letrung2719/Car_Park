@@ -10,10 +10,10 @@ public interface ITripService {
     List<TripDto> getAllTrips();
 
     // add a new trip
-    void addNewTrip(TripDto tripDto);
+    Trip addNewTrip(TripDto tripDto);
 
     //delete trip by id
-    void deleteTripById(Long id);
+    String deleteTripById(Long id);
 
     //check trip existed by id
     boolean existsById(Long id);

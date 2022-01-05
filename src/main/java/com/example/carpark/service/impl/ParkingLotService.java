@@ -5,8 +5,6 @@ import com.example.carpark.model.ParkingLot;
 import com.example.carpark.repository.ParkingLotRepository;
 import com.example.carpark.service.IParkingLotService;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,14 +31,19 @@ public class ParkingLotService implements IParkingLotService {
 
     // add a new parkingLot
     @Override
-    public void addNewParkingLot(ParkingLotDto parkingLotDto) {
-        parkingLotRepository.save(this.mapToEntity(parkingLotDto));
+    public ParkingLot addNewParkingLot(ParkingLotDto parkingLotDto) {
+        return parkingLotRepository.save(this.mapToEntity(parkingLotDto));
     }
 
     //delete parkingLot by id
     @Override
-    public void deleteById(Long id) {
-        parkingLotRepository.deleteById(id);
+    public String deleteById(Long id) {
+        if (this.existsById(id)){
+            parkingLotRepository.deleteById(id);
+            return "Delete parking lot successfully!";
+        }else{
+            return "This id is not existed!";
+        }
     }
 
     //check parkingLot existed
@@ -52,7 +55,6 @@ public class ParkingLotService implements IParkingLotService {
     //convert Entity to DTO
     @Override
     public ParkingLotDto mapToDto(ParkingLot parkingLot) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         ParkingLotDto parkingLotDto = modelMapper.map(parkingLot, ParkingLotDto.class);
         return parkingLotDto;
     }
@@ -60,7 +62,6 @@ public class ParkingLotService implements IParkingLotService {
     //convert DTO to Entity
     @Override
     public ParkingLot mapToEntity(ParkingLotDto parkingLotDto) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         ParkingLot parkingLot = modelMapper.map(parkingLotDto, ParkingLot.class);
         return parkingLot;
     }

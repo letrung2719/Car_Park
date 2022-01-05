@@ -10,10 +10,10 @@ public interface IBookingOfficeService {
     List<BookingOfficeDto> getAllBookingOffices();
 
     //add new booking office
-    void addNewBookingOffice(BookingOfficeDto bookingOfficeDto);
+    BookingOffice addNewBookingOffice(BookingOfficeDto bookingOfficeDto);
 
     //delete booking office by id
-    void deleteBookingOfficeById(Long id);
+    String deleteBookingOfficeById(Long id);
 
     //check booking office existed
     boolean existsById(Long id);

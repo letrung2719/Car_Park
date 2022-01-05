@@ -10,10 +10,10 @@ public interface ITicketService {
     List<TicketDto> getAllTickets();
 
     //add new ticket
-    void addNewTicket(TicketDto tickerDto);
+    Ticket addNewTicket(TicketDto tickerDto);
 
     //delete ticket by id
-    void deleteTicketById(Long id);
+    String deleteTicketById(Long id);
 
     //check ticket existed
     boolean existsById(Long id);

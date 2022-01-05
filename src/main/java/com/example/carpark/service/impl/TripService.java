@@ -5,8 +5,6 @@ import com.example.carpark.model.Trip;
 import com.example.carpark.repository.TripRepository;
 import com.example.carpark.service.ITripService;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,14 +31,19 @@ public class TripService implements ITripService {
 
     // add a new trip
     @Override
-    public void addNewTrip(TripDto tripDto) {
-        tripRepository.save(this.mapToEntity(tripDto));
+    public Trip addNewTrip(TripDto tripDto) {
+        return tripRepository.save(this.mapToEntity(tripDto));
     }
 
     //delete trip by id
     @Override
-    public void deleteTripById(Long id){
-        tripRepository.deleteById(id);
+    public String deleteTripById(Long id){
+        if (this.existsById(id)){
+            tripRepository.deleteById(id);
+            return "Delete trip successfully!";
+        }else{
+            return "This id is not existed!";
+        }
     }
 
     //check trip existed by id
@@ -52,7 +55,6 @@ public class TripService implements ITripService {
     //convert Entity to DTO
     @Override
     public TripDto mapToDto(Trip trip) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         TripDto tripDto = modelMapper.map(trip, TripDto.class);
         return tripDto;
     }
@@ -60,7 +62,6 @@ public class TripService implements ITripService {
     //convert DTO to Entity
     @Override
     public Trip mapToEntity(TripDto tripDto) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         Trip trip = modelMapper.map(tripDto, Trip.class);
         return trip;
     }

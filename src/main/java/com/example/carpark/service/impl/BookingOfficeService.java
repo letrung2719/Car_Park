@@ -5,7 +5,6 @@ import com.example.carpark.model.BookingOffice;
 import com.example.carpark.repository.BookingOfficeRepository;
 import com.example.carpark.service.IBookingOfficeService;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,6 +23,7 @@ public class BookingOfficeService implements IBookingOfficeService {
     //get all booking offices
     @Override
     public List<BookingOfficeDto> getAllBookingOffices() {
+        System.out.println(modelMapper);
         return bookingOfficeRepository.findAll()
                 .stream()
                 .map(this::mapToDto)
@@ -32,14 +32,19 @@ public class BookingOfficeService implements IBookingOfficeService {
 
     //add new booking office
     @Override
-    public void addNewBookingOffice(BookingOfficeDto bookingOfficeDto) {
-        bookingOfficeRepository.save(this.mapToEntity(bookingOfficeDto));
+    public BookingOffice addNewBookingOffice(BookingOfficeDto bookingOfficeDto) {
+        return bookingOfficeRepository.save(this.mapToEntity(bookingOfficeDto));
     }
 
     //delete booking office by id
     @Override
-    public void deleteBookingOfficeById(Long id) {
-        bookingOfficeRepository.deleteById(id);
+    public String deleteBookingOfficeById(Long id) {
+        if (this.existsById(id)){
+            bookingOfficeRepository.deleteById(id);
+            return "Delete booking office successfully!";
+        }else{
+            return "This id is not existed!";
+        }
     }
 
     //check booking office existed
@@ -51,7 +56,6 @@ public class BookingOfficeService implements IBookingOfficeService {
     //convert Entity to DTO
     @Override
     public BookingOfficeDto mapToDto(BookingOffice bookingOffice) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         BookingOfficeDto bookingOfficeDto = modelMapper.map(bookingOffice, BookingOfficeDto.class);
         return bookingOfficeDto;
     }
@@ -59,7 +63,6 @@ public class BookingOfficeService implements IBookingOfficeService {
     //convert DTO to Entity
     @Override
     public BookingOffice mapToEntity(BookingOfficeDto bookingOfficeDto) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         BookingOffice bookingOffice = modelMapper.map(bookingOfficeDto, BookingOffice.class);
         return bookingOffice;
     }

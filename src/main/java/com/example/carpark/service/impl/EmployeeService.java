@@ -6,7 +6,6 @@ import com.example.carpark.repository.EmployeeRepository;
 import com.example.carpark.service.IEmployeeService;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,19 +32,25 @@ public class EmployeeService implements IEmployeeService {
 
     // add a new employee
     @Override
-    public void addNewEmployee(EmployeeDto employeeDto) {
-        employeeRepository.save(this.mapToEntity(employeeDto));
+    public Employee addNewEmployee(EmployeeDto employeeDto) {
+        return employeeRepository.save(this.mapToEntity(employeeDto));
     }
 
     //delete employee by id
     @Override
-    public void deleteById(Long employee_id) {
-        employeeRepository.deleteById(employee_id);
+    public String deleteById(Long employee_id) {
+        if (this.existsById(employee_id)) {
+            employeeRepository.deleteById(employee_id);
+            return "Delete employee successfully!";
+        } else {
+            return "This id is not existed!";
+        }
     }
 
     //edit employee by id
     @Override
-    public void editEmployee(Long id, EmployeeDto employeeDto) {
+    public String editEmployee(Long id, EmployeeDto employeeDto) {
+        if (this.existsById(id)) {
             Employee employee = this.mapToEntity(employeeDto);
             Employee edited = employeeRepository.getById(id);
             edited.setAccount(employee.getAccount());
@@ -58,12 +63,20 @@ public class EmployeeService implements IEmployeeService {
             edited.setPassword(employee.getPassword());
             edited.setSex(employee.getSex());
             employeeRepository.save(edited);
+            return "Edit employee successfully!";
+        } else {
+            return "This id is not existed!";
+        }
     }
 
     //search employee by id
     @Override
     public EmployeeDto searchEmployeeById(Long employee_id) {
-        return this.mapToDto(employeeRepository.getById(employee_id));
+        if (this.existsById(employee_id)) {
+            return this.mapToDto(employeeRepository.getById(employee_id));
+        } else {
+            return null;
+        }
     }
 
     //check employee existed
@@ -75,7 +88,6 @@ public class EmployeeService implements IEmployeeService {
     //convert Entity to DTO
     @Override
     public EmployeeDto mapToDto(Employee employee) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         EmployeeDto employeeDto = modelMapper.map(employee, EmployeeDto.class);
         return employeeDto;
     }
@@ -83,7 +95,6 @@ public class EmployeeService implements IEmployeeService {
     //convert DTO to Entity
     @Override
     public Employee mapToEntity(EmployeeDto employeeDto) {
-        modelMapper.getConfiguration().setMatchingStrategy(MatchingStrategies.LOOSE);
         Employee employee = modelMapper.map(employeeDto, Employee.class);
         return employee;
     }

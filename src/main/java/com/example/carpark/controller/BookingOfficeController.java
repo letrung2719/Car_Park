@@ -1,8 +1,8 @@
 package com.example.carpark.controller;
 
 import com.example.carpark.dto.BookingOfficeDto;
+import com.example.carpark.model.BookingOffice;
 import com.example.carpark.service.IBookingOfficeService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,8 +10,11 @@ import java.util.List;
 @RestController
 @RequestMapping("booking_office")
 public class BookingOfficeController {
-    @Autowired
-    private IBookingOfficeService bookingOfficeService;
+    private final IBookingOfficeService bookingOfficeService;
+
+    public BookingOfficeController(IBookingOfficeService bookingOfficeService) {
+        this.bookingOfficeService = bookingOfficeService;
+    }
 
     @GetMapping("/view")
     public List<BookingOfficeDto> getAllBookingOffices() {
@@ -19,18 +22,12 @@ public class BookingOfficeController {
     }
 
     @PostMapping("/add")
-    public String addNewBookingOffice(@ModelAttribute BookingOfficeDto bookingOfficeDto) {
-        bookingOfficeService.addNewBookingOffice(bookingOfficeDto);
-        return "Add new booking office successfully!";
+    public BookingOffice addNewBookingOffice(@ModelAttribute BookingOfficeDto bookingOfficeDto) {
+        return bookingOfficeService.addNewBookingOffice(bookingOfficeDto);
     }
 
     @GetMapping("/delete/{officeId}")
-    public String deleteBookingOfficeById(@PathVariable ("officeId") String officeId) {
-        if (bookingOfficeService.existsById(Long.parseLong(officeId))){
-            bookingOfficeService.deleteBookingOfficeById(Long.parseLong(officeId));
-            return "Delete booking office successfully!";
-        }else{
-            return "This id is not existed!";
-        }
+    public String deleteBookingOfficeById(@PathVariable("officeId") String officeId) {
+        return bookingOfficeService.deleteBookingOfficeById(Long.parseLong(officeId));
     }
 }

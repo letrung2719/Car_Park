@@ -11,13 +11,13 @@ public interface IEmployeeService {
     List<EmployeeDto> getAllEmployees();
 
     // add a new employee
-    void addNewEmployee(EmployeeDto employeeDto);
+    Employee addNewEmployee(EmployeeDto employeeDto);
 
     //delete employee by id
-    void deleteById(Long employee_id);
+    String deleteById(Long employee_id);
 
     //edit employee by id
-    void editEmployee(Long id, EmployeeDto employeeDto);
+    String editEmployee(Long id, EmployeeDto employeeDto);
 
     //search employee by id
     EmployeeDto searchEmployeeById(Long employee_id);
