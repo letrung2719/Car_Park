@@ -1,13 +1,18 @@
 package com.example.carpark.service.impl;
 
 import com.example.carpark.dto.CarDto;
+import com.example.carpark.exception.ResourceNotFoundException;
 import com.example.carpark.model.Car;
 import com.example.carpark.repository.CarRepository;
 import com.example.carpark.service.ICarService;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -15,6 +20,7 @@ public class CarService implements ICarService {
     private CarRepository carRepository;
     private ModelMapper modelMapper;
 
+    @Autowired
     public CarService(CarRepository carRepository, ModelMapper modelMapper) {
         this.carRepository = carRepository;
         this.modelMapper = modelMapper;
@@ -22,34 +28,39 @@ public class CarService implements ICarService {
 
     //get all cars
     @Override
-    public List<CarDto> getAllCars() {
-        return carRepository.findAll()
+    public ResponseEntity<List<CarDto>> getAllCars() {
+        List<CarDto> list = carRepository.findAll()
                 .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
+        return ResponseEntity.ok(list);
+    }
+
+    //get car by license plate
+    @Override
+    public ResponseEntity<CarDto> getCarByLicensePlate(String licensePlate) {
+        Car car = carRepository.findById(licensePlate)
+                .orElseThrow(()-> new ResourceNotFoundException("This license plate " + licensePlate + " does not exists!"));
+        CarDto carDto = this.mapToDto(car);
+        return ResponseEntity.ok(carDto);
     }
 
     //add new car
     @Override
-    public Car addNewCar(CarDto carDto) {
-        return carRepository.save(this.mapToEntity(carDto));
+    public ResponseEntity<Car> addNewCar(CarDto carDto) {
+        Car car = carRepository.save(this.mapToEntity(carDto));
+        return ResponseEntity.ok(car);
     }
 
     //delete car by license plate
     @Override
-    public String deleteCarByLicensePlate(String licensePlate) {
-        if (this.existsById(licensePlate)){
-            carRepository.deleteById(licensePlate);
-            return "Delete car successfully!";
-        }else{
-            return "This id is not existed!";
-        }
-    }
-
-    //check car existed
-    @Override
-    public boolean existsById(String s) {
-        return carRepository.existsById(s);
+    public ResponseEntity<Map<String, Boolean>> deleteCarByLicensePlate(String licensePlate) {
+        Car car = carRepository.findById(licensePlate)
+                .orElseThrow(()-> new ResourceNotFoundException("This license plate " + licensePlate + " does not exists!"));
+        carRepository.deleteById(licensePlate);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+        return ResponseEntity.ok(response);
     }
 
     //convert Entity to DTO

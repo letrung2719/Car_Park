@@ -2,21 +2,23 @@ package com.example.carpark.service;
 
 import com.example.carpark.dto.TicketDto;
 import com.example.carpark.model.Ticket;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ITicketService {
     //get all tickets
-    List<TicketDto> getAllTickets();
+    ResponseEntity<List<TicketDto>> getAllTickets();
+
+    //get ticket by id
+    ResponseEntity<TicketDto> getTicketById(Long id);
 
     //add new ticket
-    Ticket addNewTicket(TicketDto tickerDto);
+    ResponseEntity<Ticket> addNewTicket(TicketDto tickerDto);
 
     //delete ticket by id
-    String deleteTicketById(Long id);
-
-    //check ticket existed
-    boolean existsById(Long id);
+    ResponseEntity<Map<String, Boolean>> deleteTicketById(Long id);
 
     //convert Entity to DTO
     TicketDto mapToDto(Ticket ticket);

@@ -2,21 +2,23 @@ package com.example.carpark.service;
 
 import com.example.carpark.dto.TripDto;
 import com.example.carpark.model.Trip;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ITripService {
     // get all trips
-    List<TripDto> getAllTrips();
+    ResponseEntity<List<TripDto>> getAllTrips();
+
+    // get trip by id
+    ResponseEntity<TripDto> getTripById(Long id);
 
     // add a new trip
-    Trip addNewTrip(TripDto tripDto);
+    ResponseEntity<Trip> addNewTrip(TripDto tripDto);
 
     //delete trip by id
-    String deleteTripById(Long id);
-
-    //check trip existed by id
-    boolean existsById(Long id);
+    ResponseEntity<Map<String, Boolean>> deleteTripById(Long id);
 
     //convert Entity to DTO
     TripDto mapToDto(Trip trip);

@@ -2,28 +2,27 @@ package com.example.carpark.service;
 
 import com.example.carpark.dto.EmployeeDto;
 import com.example.carpark.model.Employee;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IEmployeeService {
 
     // get all employees
-    List<EmployeeDto> getAllEmployees();
+    ResponseEntity<List<EmployeeDto>> getAllEmployees();
+
+    //get employee by id
+    ResponseEntity<EmployeeDto> getEmployeeById(Long employee_id);
 
     // add a new employee
-    Employee addNewEmployee(EmployeeDto employeeDto);
+    ResponseEntity<Employee> addNewEmployee(EmployeeDto employeeDto);
 
     //delete employee by id
-    String deleteById(Long employee_id);
+    ResponseEntity<Map<String, Boolean>> deleteById(Long employee_id);
 
     //edit employee by id
-    String editEmployee(Long id, EmployeeDto employeeDto);
-
-    //search employee by id
-    EmployeeDto searchEmployeeById(Long employee_id);
-
-    //check employee existed
-    boolean existsById(Long aLong);
+    ResponseEntity<EmployeeDto> editEmployee(Long id, EmployeeDto employeeDto);
 
     //convert Entity to DTO
     EmployeeDto mapToDto(Employee employee);

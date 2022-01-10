@@ -2,21 +2,23 @@ package com.example.carpark.service;
 
 import com.example.carpark.dto.CarDto;
 import com.example.carpark.model.Car;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface ICarService {
     //get all cars
-    List<CarDto> getAllCars();
+    ResponseEntity<List<CarDto>> getAllCars();
+
+    //get car by license plate
+    ResponseEntity<CarDto> getCarByLicensePlate(String licensePlate);
 
     //add new car
-    Car addNewCar(CarDto carDto);
+    ResponseEntity<Car> addNewCar(CarDto carDto);
 
     //delete car by license plate
-    String deleteCarByLicensePlate(String s);
-
-    //check car existed
-    boolean existsById(String s);
+    ResponseEntity<Map<String, Boolean>> deleteCarByLicensePlate(String s);
 
     //convert Entity to DTO
     CarDto mapToDto(Car car);

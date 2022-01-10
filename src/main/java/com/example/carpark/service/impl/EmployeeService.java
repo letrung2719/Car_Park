@@ -1,14 +1,18 @@
 package com.example.carpark.service.impl;
 
 import com.example.carpark.dto.EmployeeDto;
+import com.example.carpark.exception.ResourceNotFoundException;
 import com.example.carpark.model.Employee;
 import com.example.carpark.repository.EmployeeRepository;
 import com.example.carpark.service.IEmployeeService;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.convention.MatchingStrategies;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -16,6 +20,7 @@ public class EmployeeService implements IEmployeeService {
     private EmployeeRepository employeeRepository;
     private ModelMapper modelMapper;
 
+    @Autowired
     public EmployeeService(EmployeeRepository employeeRepository, ModelMapper modelMapper) {
         this.employeeRepository = employeeRepository;
         this.modelMapper = modelMapper;
@@ -23,66 +28,59 @@ public class EmployeeService implements IEmployeeService {
 
     // get all employees
     @Override
-    public List<EmployeeDto> getAllEmployees() {
-        return employeeRepository.findAll()
+    public ResponseEntity<List<EmployeeDto>> getAllEmployees() {
+        List<EmployeeDto> list = employeeRepository.findAll()
                 .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
+        return ResponseEntity.ok(list);
+    }
+
+    //get employee by id
+    @Override
+    public ResponseEntity<EmployeeDto> getEmployeeById(Long id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("This id " + id + " does not exists!"));
+        EmployeeDto employeeDto = this.mapToDto(employee);
+        return ResponseEntity.ok(employeeDto);
     }
 
     // add a new employee
     @Override
-    public Employee addNewEmployee(EmployeeDto employeeDto) {
-        return employeeRepository.save(this.mapToEntity(employeeDto));
+    public ResponseEntity<Employee> addNewEmployee(EmployeeDto employeeDto) {
+        Employee employee = employeeRepository.save(this.mapToEntity(employeeDto));
+        return ResponseEntity.ok(employee);
     }
 
     //delete employee by id
     @Override
-    public String deleteById(Long employee_id) {
-        if (this.existsById(employee_id)) {
-            employeeRepository.deleteById(employee_id);
-            return "Delete employee successfully!";
-        } else {
-            return "This id is not existed!";
-        }
+    public ResponseEntity<Map<String, Boolean>> deleteById(Long id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("This id " + id + " does not exists!"));
+        employeeRepository.deleteById(id);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("deleted", Boolean.TRUE);
+        return ResponseEntity.ok(response);
     }
 
     //edit employee by id
     @Override
-    public String editEmployee(Long id, EmployeeDto employeeDto) {
-        if (this.existsById(id)) {
-            Employee employee = this.mapToEntity(employeeDto);
-            Employee edited = employeeRepository.getById(id);
-            edited.setAccount(employee.getAccount());
-            edited.setDepartment(employee.getDepartment());
-            edited.setEmployeeAddress(employee.getEmployeeAddress());
-            edited.setEmployeeBirthdate(employee.getEmployeeBirthdate());
-            edited.setEmployeeEmail(employee.getEmployeeEmail());
-            edited.setEmployeeName(employee.getEmployeeName());
-            edited.setEmployeePhone(employee.getEmployeePhone());
-            edited.setPassword(employee.getPassword());
-            edited.setSex(employee.getSex());
-            employeeRepository.save(edited);
-            return "Edit employee successfully!";
-        } else {
-            return "This id is not existed!";
-        }
-    }
+    public ResponseEntity<EmployeeDto> editEmployee(Long id, EmployeeDto employeeDto) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("This id " + id + " does not exists!"));
+        employee.setAccount(employeeDto.getAccount());
+        employee.setDepartment(employeeDto.getDepartment());
+        employee.setEmployeeAddress(employeeDto.getEmployeeAddress());
+        employee.setEmployeeBirthdate(employeeDto.getEmployeeBirthdate());
+        employee.setEmployeeEmail(employeeDto.getEmployeeEmail());
+        employee.setEmployeeName(employeeDto.getEmployeeName());
+        employee.setEmployeePhone(employeeDto.getEmployeePhone());
+        employee.setPassword(employeeDto.getPassword());
+        employee.setSex(employeeDto.getSex());
 
-    //search employee by id
-    @Override
-    public EmployeeDto searchEmployeeById(Long employee_id) {
-        if (this.existsById(employee_id)) {
-            return this.mapToDto(employeeRepository.getById(employee_id));
-        } else {
-            return null;
-        }
-    }
-
-    //check employee existed
-    @Override
-    public boolean existsById(Long aLong) {
-        return employeeRepository.existsById(aLong);
+        Employee edited = employeeRepository.save(employee);
+        EmployeeDto response = this.mapToDto(edited);
+        return ResponseEntity.ok(response);
     }
 
     //convert Entity to DTO

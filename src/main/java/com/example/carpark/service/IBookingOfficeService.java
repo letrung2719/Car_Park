@@ -2,21 +2,23 @@ package com.example.carpark.service;
 
 import com.example.carpark.dto.BookingOfficeDto;
 import com.example.carpark.model.BookingOffice;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IBookingOfficeService {
     //get all booking offices
-    List<BookingOfficeDto> getAllBookingOffices();
+    ResponseEntity<List<BookingOfficeDto>> getAllBookingOffices();
+
+    //get booking office by id
+    ResponseEntity<BookingOfficeDto> getBookingOfficeById(Long id);
 
     //add new booking office
-    BookingOffice addNewBookingOffice(BookingOfficeDto bookingOfficeDto);
+    ResponseEntity<BookingOffice> addNewBookingOffice(BookingOfficeDto bookingOfficeDto);
 
     //delete booking office by id
-    String deleteBookingOfficeById(Long id);
-
-    //check booking office existed
-    boolean existsById(Long id);
+    ResponseEntity<Map<String, Boolean>> deleteBookingOfficeById(Long id);
 
     //convert Entity to DTO
     BookingOfficeDto mapToDto(BookingOffice bookingOffice);
